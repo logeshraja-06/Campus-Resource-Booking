@@ -1,4 +1,6 @@
 import Booking from "../models/Booking.js";
+import Resource from "../models/Resource.js";
+import User from "../models/User.js";
 
 export const createBooking = async (req, res) => {
   try {
@@ -143,7 +145,7 @@ export const getAllBookings = async (req, res) => {
   try {
 
     const bookings = await Booking.find()
-      .populate("student", "name email department year")
+      .populate("student", "fullName email department year")
       .populate("resource", "name category location")
       .sort({ createdAt: -1 });
 
@@ -275,5 +277,40 @@ export const getDashboardStats = async (req, res) => {
       message: "Server Error",
     });
 
+  }
+};
+
+export const cancelBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking Not Found",
+      });
+    }
+
+    if (booking.student.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized Action. You can only cancel your own bookings.",
+      });
+    }
+
+    booking.status = "Cancelled";
+    await booking.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Booking Cancelled Successfully",
+      booking,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
   }
 };

@@ -13,10 +13,14 @@ const resourceSchema = new mongoose.Schema(
       enum: [
         "Seminar Hall",
         "Computer Lab",
+        "Physics Lab",
+        "Chemistry Lab",
         "Smart Classroom",
         "Projector",
         "Auditorium",
         "Sports Ground",
+        "Classroom",
+        "Meeting Room",
       ],
       required: true,
     },
@@ -29,8 +33,27 @@ const resourceSchema = new mongoose.Schema(
 
     location: {
       type: String,
-      required: true,
-      trim: true,
+      default: "",
+    },
+
+    buildingName: {
+      type: String,
+      default: "",
+    },
+
+    floorNumber: {
+      type: Number,
+      default: 0,
+    },
+
+    roomNumber: {
+      type: String,
+      default: "",
+    },
+
+    facilities: {
+      type: [String],
+      default: [],
     },
 
     description: {
@@ -43,9 +66,39 @@ const resourceSchema = new mongoose.Schema(
       default: "",
     },
 
+    department: {
+      type: String,
+      default: "",
+    },
+
+    openingTime: {
+      type: String,
+      default: "08:00",
+    },
+
+    closingTime: {
+      type: String,
+      default: "18:00",
+    },
+
+    maxDuration: {
+      type: Number,
+      default: 8,
+    },
+
+    approvalRequired: {
+      type: Boolean,
+      default: true,
+    },
+
+    allowedUsers: {
+      type: [String],
+      default: ["student", "faculty", "admin"],
+    },
+
     status: {
       type: String,
-      enum: ["Available", "Maintenance"],
+      enum: ["Available", "Maintenance", "Unavailable"],
       default: "Available",
     },
   },
